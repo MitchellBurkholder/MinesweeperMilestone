@@ -22,6 +22,10 @@ namespace MinesweeperMilestone.Models
         public byte[] Salt { get; set; }
         public string Groups { get; set; }
 
+        /// <summary>
+        /// Generates password hash and salt for the user
+        /// </summary>
+        /// <param name="password"></param>
         public void SetPassword(string password)
         {
             
@@ -29,6 +33,11 @@ namespace MinesweeperMilestone.Models
             PasswordHash = Convert.ToBase64String(KeyDerivation.Pbkdf2(password, Salt, KeyDerivationPrf.HMACSHA256, 100000, 32));
         }
 
+        /// <summary>
+        /// Check to see if password is valid for a given user
+        /// </summary>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public bool VerifyPassword(string password)
         {
             

@@ -6,6 +6,10 @@ namespace MinesweeperMilestone.Filters
 {
     public class SessionCheckFilter : ActionFilterAttribute
     {
+        /// <summary>
+        /// Check if user is login
+        /// </summary>
+        /// <param name="context"></param>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (context.HttpContext.Session.GetString("User") == null)

@@ -4,17 +4,24 @@ using MinesweeperMilestone.Models;
 namespace MinesweeperMilestone.Models.UserDAO { 
     public class UserDAO : IUserManger
     {
+        // used to connect to the SQL database
         string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog = Players; Integrated Security = True; Connect Timeout = 30; Encrypt=True;Trust Server Certificate=False;Application Intent = ReadWrite; Multi Subnet Failover=False;Command Timeout = 30";
     
+        /// <summary>
+        /// Adds a user to the database
+        /// </summary>
+        /// <param name="userModel"></param>
+        /// <returns></returns>
         public int AddUser(UserModel userModel)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = @"INSERT INTO users (Username, UserFirstName, UserLastName,
-                Sex, Age, State, EmailAddress, PasswordHash, Salt, GROUPS)
-                VALUES (@Username, @UserFirstName, @UserLastName,
-                @Sex, @Age, @State, @EmailAddress, @PasswordHash, @Salt, @GROUPS)
+                string query = @"
+                INSERT INTO users 
+                (Username, UserFirstName, UserLastName, Sex, Age, State, EmailAddress, PasswordHash, Salt, [GROUPS])
+                VALUES 
+                (@Username, @UserFirstName, @UserLastName,@Sex, @Age, @State, @EmailAddress, @PasswordHash, @Salt, @GROUPS)
                 SELECT SCOPE_IDENTITY();";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
@@ -38,6 +45,12 @@ namespace MinesweeperMilestone.Models.UserDAO {
                 
         }
 
+        /// <summary>
+        /// Checks to see if the user exist in the database
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public int CheckCredentials(string userName, string password)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -61,7 +74,7 @@ namespace MinesweeperMilestone.Models.UserDAO {
                         EmailAddress = reader.GetString(reader.GetOrdinal("EmailAddress")),
                         PasswordHash = reader.GetString(reader.GetOrdinal("PasswordHash")),
                         Salt = (byte[])reader["Salt"],
-                        Groups = reader.GetString(reader.GetOrdinal("Groups"))
+                        Groups = reader.GetString(reader.GetOrdinal("GROUPS"))
                     };
 
                     bool valid = userModel.VerifyPassword(password);
@@ -78,6 +91,10 @@ namespace MinesweeperMilestone.Models.UserDAO {
             }
         }
 
+        /// <summary>
+        /// Gets rid of a user
+        /// </summary>
+        /// <param name="userModel"></param>
         public void DeleteUser(UserModel userModel)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -90,6 +107,10 @@ namespace MinesweeperMilestone.Models.UserDAO {
             }
         }
 
+        /// <summary>
+        /// Gets all the users 
+        /// </summary>
+        /// <returns></returns>
         public List<UserModel> GetAllUsers()
         {
             List<UserModel> users = new List<UserModel>();
@@ -114,7 +135,7 @@ namespace MinesweeperMilestone.Models.UserDAO {
                         EmailAddress = reader.GetString(reader.GetOrdinal("EmailAddress")),
                         PasswordHash = reader.GetString(reader.GetOrdinal("PasswordHash")),
                         Salt = (byte[])reader["Salt"],
-                        Groups = reader.GetString(reader.GetOrdinal("Groups"))
+                        Groups = reader.GetString(reader.GetOrdinal("GROUPS"))
                     };
                     users.Add(userModel);
                 }
@@ -122,6 +143,11 @@ namespace MinesweeperMilestone.Models.UserDAO {
             return users;
         }
 
+        /// <summary>
+        /// Fetches user based on the parameter 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public UserModel GetUserById(int id)
         {
 
@@ -146,7 +172,7 @@ namespace MinesweeperMilestone.Models.UserDAO {
                         EmailAddress = reader.GetString(reader.GetOrdinal("EmailAddress")),
                         PasswordHash = reader.GetString(reader.GetOrdinal("PasswordHash")),
                         Salt = (byte[])reader["Salt"],
-                        Groups = reader.GetString(reader.GetOrdinal("Groups"))
+                        Groups = reader.GetString(reader.GetOrdinal("GROUPS"))
                     };
                     return userModel;
                 }
@@ -155,6 +181,10 @@ namespace MinesweeperMilestone.Models.UserDAO {
             return null;
         }
 
+        /// <summary>
+        /// Updates information about a user 
+        /// </summary>
+        /// <param name="userModel"></param>
         public void UpdateUser(UserModel userModel)
         {
             int id = userModel.Id;
@@ -164,8 +194,8 @@ namespace MinesweeperMilestone.Models.UserDAO {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-                    string query = @"UPDATE users SET @Username, @UserFirstName, @UserLastName,
-                    @Sex, @Age, @State, @EmailAddress, @PasswordHash, @Salt, @GROUPS WHERE Id = @Id";
+                    string query = @"UPDATE users SET Username = @Username, UserFirstName = @UserFirstName, UserLastName = @UserLastName,
+                    Sex = @Sex, Age = @Age, State = @State, EmailAddress = @EmailAddress, PasswordHash = @PasswordHash, Salt = @Salt, GROUPS = @GROUPS WHERE Id = @Id";
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@Username", userModel.Username);
                     command.Parameters.AddWithValue("@UserFirstName", userModel.UserFirstName);
