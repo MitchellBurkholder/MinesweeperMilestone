@@ -35,7 +35,7 @@ namespace MinesweeperMilestone.Models
 
         /// <summary>
         /// Check to see if password is valid for a given user
-        /// </summary>
+        /// </summary>\
         /// <param name="password"></param>
         /// <returns></returns>
         public bool VerifyPassword(string password)
