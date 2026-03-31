@@ -23,12 +23,13 @@ namespace MinesweeperMilestone.Models
         public string Groups { get; set; }
 
         /// <summary>
-        /// Generates password hash and salt for the user
+        /// Generates password hash and salt for the user.
+        /// Using the standard PBKDF2 algorithm to hash.
+        /// Using RNG for the salt.
         /// </summary>
         /// <param name="password"></param>
         public void SetPassword(string password)
         {
-            
             Salt = RandomNumberGenerator.GetBytes(16);
             PasswordHash = Convert.ToBase64String(KeyDerivation.Pbkdf2(password, Salt, KeyDerivationPrf.HMACSHA256, 100000, 32));
         }
@@ -40,8 +41,9 @@ namespace MinesweeperMilestone.Models
         /// <returns></returns>
         public bool VerifyPassword(string password)
         {
-            
-            if (password != null && PasswordHash == Convert.ToBase64String(KeyDerivation.Pbkdf2(password, Salt, KeyDerivationPrf.HMACSHA256, 100000, 32)))
+            // Re-hash the entered password and grab the original salt and compare to the original
+            if (password != null && PasswordHash == 
+                Convert.ToBase64String(KeyDerivation.Pbkdf2(password, Salt, KeyDerivationPrf.HMACSHA256, 100000, 32)))
             {
                 return true;
             }
