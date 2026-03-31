@@ -16,6 +16,7 @@ namespace MinesweeperMilestone.Models.UserDAO {
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                // SQL Connection and query prep
                 connection.Open();
                 string query = @"
                 INSERT INTO users 
@@ -24,6 +25,7 @@ namespace MinesweeperMilestone.Models.UserDAO {
                 (@Username, @UserFirstName, @UserLastName,@Sex, @Age, @State, @EmailAddress, @PasswordHash, @Salt, @GROUPS)
                 SELECT SCOPE_IDENTITY();";
 
+                // INSERT statements
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Username", userModel.Username);
@@ -55,6 +57,7 @@ namespace MinesweeperMilestone.Models.UserDAO {
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                // SQL connection and query
                 connection.Open();
                 string query = "SELECT * FROM users WHERE Username = @Username";
                 SqlCommand command = new SqlCommand(query, connection);
@@ -62,6 +65,7 @@ namespace MinesweeperMilestone.Models.UserDAO {
                 SqlDataReader reader = command.ExecuteReader();
                 if (reader.Read())
                 {
+                    // Create the new user
                     UserModel userModel = new UserModel
                     {
                         Id = reader.GetInt32(0),
@@ -77,6 +81,7 @@ namespace MinesweeperMilestone.Models.UserDAO {
                         Groups = reader.GetString(reader.GetOrdinal("GROUPS"))
                     };
 
+                    // Verify the new user
                     bool valid = userModel.VerifyPassword(password);
                     if (valid)
                     {
@@ -117,12 +122,15 @@ namespace MinesweeperMilestone.Models.UserDAO {
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                // SQL Connection and query
                 connection.Open();
                 string query = "SELECT * FROM users";
                 SqlCommand command = new SqlCommand(query, connection);
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
+                    // retrieve userModel data
+                    // Creates a new list that adds all the found users to it
                     UserModel userModel = new UserModel
                     {
                         Id = reader.GetInt32(0),
@@ -153,6 +161,7 @@ namespace MinesweeperMilestone.Models.UserDAO {
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                // SQL Connection and query
                 connection.Open();
                 string query = "SELECT * FROM users WHERE Id = @Id";
                 SqlCommand command = new SqlCommand(query, connection);
@@ -160,6 +169,7 @@ namespace MinesweeperMilestone.Models.UserDAO {
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
+                    // retrieve userModel data 
                     UserModel userModel = new UserModel
                     {
                         Id = reader.GetInt32(0),
@@ -177,7 +187,6 @@ namespace MinesweeperMilestone.Models.UserDAO {
                     return userModel;
                 }
             }
-
             return null;
         }
 
@@ -187,10 +196,12 @@ namespace MinesweeperMilestone.Models.UserDAO {
         /// <param name="userModel"></param>
         public void UpdateUser(UserModel userModel)
         {
+            // Find the user by ID
             int id = userModel.Id;
             UserModel found = GetUserById(id);
             if (found != null)
             {
+                // SQL Connection and UPDATE command
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -208,7 +219,6 @@ namespace MinesweeperMilestone.Models.UserDAO {
                     command.Parameters.AddWithValue("@Salt", userModel.Salt);
                     command.Parameters.AddWithValue("@GROUPS", userModel.Groups);
                     command.ExecuteNonQuery();
-
                 }
             }
         }
