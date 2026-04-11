@@ -1,12 +1,19 @@
-﻿
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using MinesweeperMilestone.Models;
-namespace MinesweeperMilestone.Models.UserDAO { 
+
+namespace MinesweeperMilestone.Models.UserDAO
+{
     public class UserDAO : IUserManger
     {
-        // used to connect to the SQL database
-        string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog = Players; Integrated Security = True; Connect Timeout = 30; Encrypt=True;Trust Server Certificate=False;Application Intent = ReadWrite; Multi Subnet Failover=False;Command Timeout = 30";
-    
+        // private so it can't be accidentally changed outside this class
+        private readonly string connectionString;
+
+        // constructor to catch the string passed from UserController
+        public UserDAO(string connString)
+        {
+            connectionString = connString;
+        }
+
         /// <summary>
         /// Adds a user to the database
         /// </summary>
@@ -42,9 +49,9 @@ namespace MinesweeperMilestone.Models.UserDAO {
                     object result = command.ExecuteScalar();
                     return Convert.ToInt32(result);
                 }
-              
+
             }
-                
+
         }
 
         /// <summary>

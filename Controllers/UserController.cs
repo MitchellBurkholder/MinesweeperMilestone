@@ -2,13 +2,24 @@
 using MinesweeperMilestone.Filters;
 using MinesweeperMilestone.Models;
 using MinesweeperMilestone.Models.UserDAO;
+using Microsoft.Extensions.Configuration; // 1. Add this using statement!
 
 namespace MinesweeperMilestone.Controllers
 {
     public class UserController : Controller
     {
-        // a static version of the UserDAO class used to maintain information across sessions
-        static UserDAO users = new UserDAO();
+        
+        private readonly UserDAO users;
+
+        // constructor to grab the configuration
+        public UserController(IConfiguration config)
+        {
+            // Pull the string out of appsettings.json (User Secrets for Jackson's Mac)
+            string connString = config.GetConnectionString("DefaultConnection");
+
+            // Pass it to the DAO
+            users = new UserDAO(connString);
+        }
 
         /// <summary>
         /// Launches the login page
@@ -26,7 +37,7 @@ namespace MinesweeperMilestone.Controllers
         /// <param name="password"></param>
         /// <returns></returns>
         public IActionResult ProcessLogin(string Username, string password)
-        {         
+        {
 
             UserModel userData = new UserModel { Id = 1, Username = Username, Password = password };
 
@@ -79,6 +90,7 @@ namespace MinesweeperMilestone.Controllers
             user.State = registerViewModel.State;
             user.EmailAddress = registerViewModel.EmailAddress;
             user.Groups = "User";
+
             users.AddUser(user);
 
             return View("Index");
