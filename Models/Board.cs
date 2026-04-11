@@ -1,4 +1,7 @@
-﻿using System;
+﻿//using ServiceStack.DataAnnotations;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -14,8 +17,14 @@ namespace MinesweeperMilestone.Models
     {
 
         // ----- PROPERTIES -----
-
+        [DisplayName("Enter a number for the board size. The entered number will be the number you entered sqaured")]
+        [Required]
+        [Range(5, 15)]
         public int size { get; set; }
+
+        [DisplayName("Enter a number between 1 & 3. Higher the number Higher the difficulty")]
+        [Required]
+        [Range(1, 3)]
         public int difficulty { get; set; }
         public int numBombs { get; set; }
         public int score { get; set; }
