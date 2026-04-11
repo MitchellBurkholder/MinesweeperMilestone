@@ -18,7 +18,7 @@ namespace MinesweeperMilestone.Models
         public int size { get; set; }
         public int difficulty { get; set; }
         public int numBombs { get; set; }
-        public int score;
+        public int score { get; set; }
         public Cell[,] cells { get; set; }
         public int rewardsRemaining { get; set; }
         public DateTime startTime { get; set; }
