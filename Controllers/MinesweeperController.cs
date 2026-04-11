@@ -24,21 +24,24 @@ namespace MinesweeperMilestone.Controllers
         // Handles the left click from the grid
         public IActionResult Visit(int row, int col)
         {
-            // Grab the board out of memory
             Board gameBoard = HttpContext.Session.GetObjectFromJson<Board>("CurrentGame");
 
             if (gameBoard != null)
             {
-                // TODO: call the board's logic here
+                // Only allow moves if the game isn't over
+                if (gameBoard.CheckGameState() == Board.GameState.InProgress)
+                {
+                    // Grab the specific cell
+                    var targetCell = gameBoard.cells[row, col];
 
-                // Forcefully alter cell state for testing purposes
-                gameBoard.cells[row, col].isVisited = true; 
+                    // Run the existing game logic
+                    gameBoard.ProcessMove(targetCell, "Visit", row, col);
 
-                // Save the updated board back to the session
-                HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
+                    // Save the updated board state back to the session
+                    HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
+                }
             }
 
-            // Refresh the page
             return RedirectToAction("Index");
         }
     }
