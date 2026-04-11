@@ -22,7 +22,7 @@ namespace MinesweeperMilestone.Controllers
         }
 
         // Handles the left click from the grid
-        public IActionResult Reveal(int row, int col)
+        public IActionResult Visit(int row, int col)
         {
             // Grab the board out of memory
             Board gameBoard = HttpContext.Session.GetObjectFromJson<Board>("CurrentGame");
