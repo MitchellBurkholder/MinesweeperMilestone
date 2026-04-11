@@ -1,0 +1,28 @@
+﻿@model MinesweeperMilestone.Models.Board
+
+@{
+    ViewData["Title"] = "Minesweeper Board";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Minesweeper</h1>
+
+    <div style="display: inline-block;">
+        
+        @for (int r = 0; r < Model.size; r++)
+        {
+            <div style="display: flex;">
+                @for (int c = 0; c < Model.size; c++)
+                {
+                    // Grab the specific cell from your 2D array
+                    var currentCell = Model.cells[r, c];
+                    
+                    <div style="width: 30px; height: 30px; border: 1px solid black; line-height: 30px;">
+                        ?
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</div>
