@@ -29,12 +29,10 @@ namespace MinesweeperMilestone.Controllers
 
             if (gameBoard != null)
             {
-                // TODO: You will call your board's logic here! 
-                // e.g., gameBoard.RevealCell(row, col);
-                // gameBoard.CheckForWinOrLoss();
+                // TODO: call the board's logic here
 
-                // For right now, let's just forcefully alter the cell's state to test the UI:
-                // gameBoard.cells[row, col].IsRevealed = true; // (Assuming your cell has this property)
+                // Forcefully alter cell state for testing purposes
+                gameBoard.cells[row, col].isVisited = true; 
 
                 // Save the updated board back to the session
                 HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
