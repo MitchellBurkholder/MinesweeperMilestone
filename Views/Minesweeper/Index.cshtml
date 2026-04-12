@@ -15,7 +15,7 @@
         <div class="alert alert-success">
             <h2 class="text-success">You Win!</h2>
             <h3>Final Score: @Model.DetermineFinalScore()</h3>
-            <a asp-action="StartGame" class="btn btn-success">New Game</a>
+            <a asp-action="StartGame" asp-controller="User" class="btn btn-success">New Game</a>
         </div>
     }
     else if (currentState == MinesweeperMilestone.Models.Board.GameState.Lost)
@@ -23,7 +23,7 @@
         <div class="alert alert-danger">
             <h2 class="text-danger">Game Over! You hit a mine.</h2>
             <h3>Final Score: @Model.Score</h3>
-            <a asp-action="StartGame" class="btn btn-primary">Try Again</a>
+            <a asp-action="StartGame" asp-controller="User"  class="btn btn-primary">Try Again</a>
         </div>
     }
     else
