@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="ServiceStack" Version="10.0.6" />
     <PackageReference Include="ServiceStack.text" Version="10.0.6" />
     <PackageReference Include="System.Data.SqlClient" Version="4.9.1" />

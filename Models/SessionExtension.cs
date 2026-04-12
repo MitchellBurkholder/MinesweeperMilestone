@@ -1,5 +1,6 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json; // Changed to Newtonsoft for 2d array support
+using System.Text.Json.Serialization;
 
 namespace MinesweeperMilestone
 {
@@ -7,13 +8,15 @@ namespace MinesweeperMilestone
     {
         public static void SetObjectAsJson(this ISession session, string key, object value)
         {
-            session.SetString(key, JsonSerializer.Serialize(value));
+            // Use JsonConvert.SerializeObject (handles [,] arrays)
+            session.SetString(key, JsonConvert.SerializeObject(value));
         }
 
         public static T GetObjectFromJson<T>(this ISession session, string key)
         {
             var value = session.GetString(key);
-            return value == null ? default(T) : JsonSerializer.Deserialize<T>(value);
+            // Use JsonConvert.DeserializeObject
+            return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
         }
     }
 }
