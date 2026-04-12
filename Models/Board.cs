@@ -41,6 +41,12 @@ namespace MinesweeperMilestone.Models
 
         // ----- CONSTRUCTOR ----- 
 
+        // Added for the serializer
+        public Board()
+        {
+
+        }
+
         /// <summary>
         /// Calls initializeBoard to setup the board.
         /// </summary>
