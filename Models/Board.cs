@@ -10,6 +10,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using static ServiceStack.Script.Lisp;
+using Newtonsoft.Json;
 
 namespace MinesweeperMilestone.Models
 {
@@ -20,14 +21,17 @@ namespace MinesweeperMilestone.Models
         [DisplayName("Enter a number for the board size. The entered number will be the number you entered sqaured")]
         [Required]
         [Range(5, 15)]
+        [JsonProperty("size")]
         public int size { get; set; }
 
         [DisplayName("Enter a number between 1 & 3. Higher the number Higher the difficulty")]
         [Required]
         [Range(1, 3)]
+        [JsonProperty("difficulty")]
         public int difficulty { get; set; }
         public int numBombs { get; set; }
         public int score { get; set; }
+        [JsonProperty("cells")]
         public Cell[,] cells { get; set; }
         public int rewardsRemaining { get; set; }
         public DateTime startTime { get; set; }

@@ -8,19 +8,30 @@ namespace MinesweeperMilestone.Controllers
     {
         // Accepts the form data. Defaults to 5x5, Easy if no data is passed yet.
         [SessionCheckFilter]
-        public IActionResult Index(int size = 5, int difficulty = 1)
+        public IActionResult Index()
         {
-            // Try to load an existing game from the session
+            // get the board from the session
             Board gameBoard = HttpContext.Session.GetObjectFromJson<Board>("CurrentGame");
 
-            // If no game exists, or if a new size/difficulty was submitted, create a new board
-            if (gameBoard == null || gameBoard.size != size || gameBoard.difficulty != difficulty)
+            // If it's null (first time visiting), create a default one
+            if (gameBoard == null)
             {
-                gameBoard = new Board(size, difficulty);
+                gameBoard = new Board(5, 1);
                 HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
             }
 
             return View(gameBoard);
+        }
+
+        // method specifically for the form submission
+        [HttpPost]
+        public IActionResult ProcessCreate(int size, int difficulty)
+        {
+            // create a fresh board when the form is submitted
+            Board gameBoard = new Board(size, difficulty);
+            HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
+
+            return RedirectToAction("Index");
         }
 
         // Handles the left click from the grid
