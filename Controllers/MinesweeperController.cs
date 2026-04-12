@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MinesweeperMilestone.Models;
+using MinesweeperMilestone.Filters;
 
 namespace MinesweeperMilestone.Controllers
 {
     public class MinesweeperController : Controller
     {
         // Accepts the form data. Defaults to 5x5, Easy if no data is passed yet.
+        [SessionCheckFilter]
         public IActionResult Index(int size = 5, int difficulty = 1)
         {
             // Try to load an existing game from the session
