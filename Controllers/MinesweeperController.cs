@@ -50,6 +50,12 @@ namespace MinesweeperMilestone.Controllers
                     // Run the existing game logic
                     gameBoard.ProcessMove(targetCell, "Visit", row, col);
 
+                    // Check for bomb hit 
+                    if (targetCell.isBomb)
+                    {
+                        // gameBoard.
+                    }
+
                     // Save the updated board state back to the session
                     HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
                 }

@@ -37,6 +37,7 @@ namespace MinesweeperMilestone.Models
         public DateTime startTime { get; set; }
         public DateTime endTime { get; set; }
         public enum GameState { InProgress, Won, Lost }
+        public GameState state { get; set; } = GameState.InProgress;
         private static Random rand = new Random();
         public int powersAvailable { get; private set; }
 
@@ -310,25 +311,29 @@ namespace MinesweeperMilestone.Models
                 case "Visit":
                     if (cell.isVisited)
                     {
-                        return new MoveResult
-                        {
-                            success = false,
-                            message = $"Cell ({row}, {col}) is already visited."
-                        };
+                        return new MoveResult { success = false, message = "Already visited." };
                     }
 
+                    // If it's a bomb, mark it visited so CheckGameState() returns 'Lost'
+                    if (cell.isBomb)
+                    {
+                        cell.isVisited = true;
+                        
+                        return new MoveResult { success = true, hitBomb = true, message = "BOOM" };
+                    }
+
+                    // Otherwise, continue with flood fill for safe cells
                     bool rewardCollected = FloodFill(row, col);
 
-                    if (!cell.isBomb && !cell.isFlagged)
-                    {
-                        Score += 1;
-                    }
+                    // Only increment score if it wasn't a bomb 
+                    Score += 1;
+
                     return new MoveResult
                     {
                         success = true,
                         message = $"Visited cell at ({row}, {col}).",
                         collectedPower = rewardCollected,
-                        hitBomb = cell.isBomb
+                        hitBomb = false
                     };
 
 
