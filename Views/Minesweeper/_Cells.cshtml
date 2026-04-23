@@ -1,72 +1,64 @@
-﻿@model MinesweeperMilestone.Models.Board
+﻿
+@model MinesweeperMilestone.Models.Cell
 
 @{
-    ViewData["Title"] = "Minesweeper Board";
-    // Check game state
-    var currentState = Model.CheckGameState();
-    bool isGameOver = currentState != MinesweeperMilestone.Models.Board.GameState.InProgress;
-}
+    // data to pass over from the Index view
+    bool isGameOver = (bool)@ViewData["isGameOver"];
+    var cell = Model;
+    var r = @ViewData["r"];
+    var c = @ViewData["c"];
 
-    <div style="display: inline-block; margin-top: 20px; border: 5px solid #7b7b7b;">
-        @for (int r = 0; r < Model.size; r++)
+    string imagePath = "";
+
+    // Determine which image to show
+    if (cell.isVisited)
+    {
+        if (cell.isBomb)
         {
-            <div style="display: flex;">
-                @for (int c = 0; c < Model.size; c++)
-                {
-                    var cell = Model.cells[r, c];
-                    string imagePath = "";
-
-                    // Determine which image to show
-                    if (cell.isVisited)
-                    {
-                        if (cell.isBomb)
-                        {
-                            imagePath = "~/img/Minesweeper_Bomb.png";
-                        }
-                        else if (cell.numBombNeighbors > 0)
-                        {
-                            imagePath = $"~/img/Minesweeper_{cell.numBombNeighbors}.png";
-                        }
-                        else
-                        {
-                            imagePath = "~/img/Minesweeper_Empty.png";
-                        }
-                    }
-                    else
-                    {
-                        // If the game is over and this is a bomb, reveal it
-                        if (isGameOver && cell.isBomb)
-                        {
-                            imagePath = "~/img/Minesweeper_Bomb.png";
-                        }
-                        else if (cell.isFlagged)
-                        {
-                            imagePath = "~/img/Minesweeper_flag.png";
-                        }
-                        else
-                        {
-                            imagePath = "~/img/Minesweeper_unopened_square.png";
-                        }
-                    }
-
-                    // Render the cell
-                    var cellStyle = "width: 40px; height: 40px; display: block; border: none; padding: 0; text-decoration: none;";
-
-                    if (cell.isVisited || isGameOver)
-                    {
-                        // Visited OR Game Over
-                        <div style="@cellStyle">
-                            <img src="@Url.Content(imagePath)" alt="Cell" style="width: 100%; height: 100%; display: block;" />
-                        </div>
-                    }
-                    else
-                    {
-                        // Active Game & Unvisited: Clickable link
-                        <a asp-action="Visit" asp-route-row="@r" asp-route-col="@c" style="@cellStyle">
-                            <img src="@Url.Content(imagePath)" alt="Unvisited Cell" style="width: 100%; height: 100%; display: block;" />
-                        </a>
-                    }
-                }
-            </div> <!--Loop body-->
+            imagePath = "~/img/Minesweeper_Bomb.png";
         }
-    </div><!--code for cell rednering-->
+        else if (cell.numBombNeighbors > 0)
+        {
+            imagePath = $"~/img/Minesweeper_{cell.numBombNeighbors}.png";
+        }
+        else
+        {
+            imagePath = "~/img/Minesweeper_Empty.png";
+        }
+    }
+    else
+    {
+        // If the game is over and this is a bomb, reveal it
+        if (isGameOver && cell.isBomb)
+        {
+            imagePath = "~/img/Minesweeper_Bomb.png";
+        }
+        else if (cell.isFlagged)
+        {
+            imagePath = "~/img/Minesweeper_flag.png";
+        }
+        else
+        {
+            imagePath = "~/img/Minesweeper_unopened_square.png";
+        }
+    }
+
+    // Render the cell
+
+    var cellStyle = "width: 40px; height: 40px; display: block; border: none; padding: 0; text-decoration: none;";
+
+    if (cell.isVisited || isGameOver)
+    {
+        // Visited OR Game Over
+        <div style="@cellStyle">
+            <img src="@Url.Content(imagePath)" alt="Cell" style="width: 100%; height: 100%; display: block;" />
+        </div>
+    }
+    else
+    {
+        // Active Game & Unvisited: Clickable link
+        <a asp-action="Visit" asp-route-row="@r" asp-route-col="@c" style="@cellStyle">
+            <img src="@Url.Content(imagePath)" alt="Unvisited Cell" style="width: 100%; height: 100%; display: block;" />
+        </a>
+    }
+}
