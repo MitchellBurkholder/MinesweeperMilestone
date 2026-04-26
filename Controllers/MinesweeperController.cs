@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using MinesweeperMilestone.Filters;
 using MinesweeperMilestone.Models;
+using System.Reflection;
+using System.Runtime.InteropServices.JavaScript;
 
 namespace MinesweeperMilestone.Controllers
 {
@@ -106,17 +108,13 @@ namespace MinesweeperMilestone.Controllers
                     // Run the existing game logic
                     gameBoard.ProcessMove(targetCell, "Visit", row, col);
 
-                    // Check for bomb hit 
-                    /*if (targetCell.isBomb)
-                    {
-                        // gameBoard.
-                    }*/
-
                     // Save the updated board state back to the session
                     HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
                 }
             }
-            return PartialView("_Cells", gameBoard.cells[row, col]);
+                  
+            return PartialView("_board", gameBoard);
+                
         }
     }
 }
