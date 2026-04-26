@@ -38,9 +38,49 @@
                 @for (int c = 0; c < Model.size; c++)
                 {
                     var cell = Model.cells[r, c];
-                    @Html.Partial("_Cells", cell,  new ViewDataDictionary(ViewData) { { "isGameOver", isGameOver }, { "r", r}, { "c", c} });
+
+                    // The the ViewDataDictionary class is use to move specific data from this view to the partial one
+                    @await Html.PartialAsync("_Cells", cell, new ViewDataDictionary(ViewData) {
+                        { "isGameOver", isGameOver }, 
+                        { "r", r}, 
+                        { "c", c} });
                 }
             </div> <!--Inner-Loop body-->
         }<!--Outer loop body-->
     </div><!--code for cell rednering-->
 </div>
+
+/*
+    The scripts below might be causing a problem.
+*/
+
+@section Scripts {
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script>
+			$(document).ready(function(){
+            $(document).on.("click", ".game-button button", function(e){
+					e.preventDefault();
+                    var row = $(this).data("row");
+                    var col = $(this).data("col");
+                    var wrapper = $(this).closest(".game-button");
+                    var token = $('input[name="__RequestVerificationToken"]').val();
+                    $(this).prop("disabled", true);
+					$.ajax({
+						type: "POST",
+                        url: "/MineSweeper/PartialPageCellUpdate",
+						data: {row: row, col: col},
+                        headers: token ? { "RequestVerificationToken": token } : {},
+						success : function(html){
+					    wrapper.replaceWith(html);
+							
+						},
+						error: function(xhr, status, error){
+							console.error("An error occurred: " + error);
+						}
+
+					});
+				}
+			})
+		</script>
+        }
+}

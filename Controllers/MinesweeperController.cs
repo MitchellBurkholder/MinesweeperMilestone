@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MinesweeperMilestone.Models;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using MinesweeperMilestone.Filters;
+using MinesweeperMilestone.Models;
 
 namespace MinesweeperMilestone.Controllers
 {
@@ -34,6 +35,7 @@ namespace MinesweeperMilestone.Controllers
             return RedirectToAction("Index");
         }
 
+
         // Handles the left click from the grid
         public IActionResult Visit(int row, int col)
         {
@@ -62,6 +64,40 @@ namespace MinesweeperMilestone.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        // code that should be used for the Partail page update. 
+       [HttpPost]
+        public IActionResult PartialPageCellUpdate(int row, int col)
+        {
+            Board gameBoard = HttpContext.Session.GetObjectFromJson<Board>("CurrentGame");
+            
+            if (gameBoard == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                // Only allow moves if the game isn't over
+                if (gameBoard.CheckGameState() == Board.GameState.InProgress)
+                {
+                    // Grab the specific cell
+                    var targetCell = gameBoard.cells[row, col];
+
+                    // Run the existing game logic
+                    gameBoard.ProcessMove(targetCell, "Visit", row, col);
+
+                    // Check for bomb hit 
+                    /*if (targetCell.isBomb)
+                    {
+                        // gameBoard.
+                    }*/
+
+                    // Save the updated board state back to the session
+                    HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
+                }
+            }
+            return PartialView("_Cells", gameBoard.cells[row, col]);
         }
     }
 }

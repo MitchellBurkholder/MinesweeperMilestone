@@ -7,6 +7,7 @@
     var cell = Model;
     var r = @ViewData["r"];
     var c = @ViewData["c"];
+    var cellStyle = "width: 40px; height: 40px; display: block; border: none; padding: 0; text-decoration: none;";
 
     string imagePath = "";
 
@@ -44,9 +45,6 @@
     }
 
     // Render the cell
-
-    var cellStyle = "width: 40px; height: 40px; display: block; border: none; padding: 0; text-decoration: none;";
-
     if (cell.isVisited || isGameOver)
     {
         // Visited OR Game Over
@@ -56,9 +54,23 @@
     }
     else
     {
-        // Active Game & Unvisited: Clickable link
-        <a asp-action="Visit" asp-route-row="@r" asp-route-col="@c" style="@cellStyle">
-            <img src="@Url.Content(imagePath)" alt="Unvisited Cell" style="width: 100%; height: 100%; display: block;" />
-        </a>
-    }
+                // Active Game & Unvisited: Clickable link
+        // when trying to change the link for the asp-action. It does take PartialPageCellUpdate page.
+                <a asp-action="Visit" asp-route-row="@r" asp-route-col="@c" style="@cellStyle">
+                    <img src="@Url.Content(imagePath)" alt="Unvisited Cell" style="width: 100%; height: 100%; display: block;" />
+                </a>
+     }
+
+    /*  This should be used for the ajax stuff, but might be not correct 
+    else
+    {
+        <div class="game-button" data-row="@r" data-col="@c" style="@cellStyle">
+            <button class="cell-btn" type="button" data-row="@r" data-col="@c"
+                    style="width:100%;height:100%;border:none;background:none;padding:0;">
+                <img src="@Url.Content(imagePath)" alt="Unvisited Cell" style="width:100%;height:100%;display:block;" />
+            </button>
+        </div>
+    }*/
+
+
 }
