@@ -8,6 +8,7 @@
 }
 
 <div class="text-center">
+    @Html.AntiForgeryToken();
     <h1 class="display-4">Minesweeper</h1>
 
     @if (currentState == MinesweeperMilestone.Models.Board.GameState.Won)
@@ -73,14 +74,15 @@
                     var col = $(this).data("col");
                     var wrapper = $(this).closest(".game-button");
                     var token = $('input[name="__RequestVerificationToken"]').val();
+                      
             
                     $(this).prop("disabled", true);
             
                     $.ajax({
                         type: "POST",
-                        url: "/MineSweeper/PartialPageCellUpdate",
+                        url: "/Minesweeper/PartialPageCellUpdate",
                         data: {row: row, col: col},
-                        headers: token ? { "RequestVerificationToken": token } : {},
+                        headers: { "RequestVerificationToken": token },
 
                         success: function(html){
                             wrapper.replaceWith(html);
@@ -93,5 +95,5 @@
                 }); 
             });
     </script>
-        }
+        
 }

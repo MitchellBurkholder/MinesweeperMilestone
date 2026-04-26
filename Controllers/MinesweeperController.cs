@@ -86,6 +86,7 @@ namespace MinesweeperMilestone.Controllers
 
         // code that should be used for the Partial page update. 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult PartialPageCellUpdate(int row, int col)
         {
             Board gameBoard = HttpContext.Session.GetObjectFromJson<Board>("CurrentGame");
