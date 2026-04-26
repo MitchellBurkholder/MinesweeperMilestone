@@ -2,8 +2,9 @@
 <div class="text-center">
     @Html.AntiForgeryToken();
     <h1 class="display-4">Minesweeper</h1>
-
-    @await Html.PartialAsync("_board");
+    <div id="board-container">
+        @await Html.PartialAsync("_board")
+    </div>
 </div>
 
 
@@ -41,6 +42,7 @@
 
                         success: function(html){
                             wrapper.replaceWith(html);
+                            $("#board-container").replaceWith(html);
                         },
 
                         error: function(xhr, status, error){
