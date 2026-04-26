@@ -2,6 +2,10 @@
 <div class="text-center">
     @Html.AntiForgeryToken();
     <h1 class="display-4">Minesweeper</h1>
+
+    <!--Created at timestamp-->
+    <p class="text-muted">Page loaded at: <strong>@DateTime.Now.ToString("T")</strong></p>
+
     <div id="board-container">
         @await Html.PartialAsync("_board")
     </div>
@@ -16,15 +20,30 @@
             <script>
 
             // Right-Click Flag Logic
-            function handleRightClick(event, row, col) {
-                event.preventDefault(); // Stop the default browser context menu
-                window.location.href = `/Minesweeper/Flag?row=${row}&col=${col}`;
-            }
+        function handleRightClick(event, row, col) {
+            event.preventDefault(); // Stop the context menu
+    
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $.ajax({
+                type: "POST",
+                url: "/Minesweeper/Flag",
+                data: {row: row, col: col},
+                headers: { "RequestVerificationToken": token },
+                success: function(html){
+                    // This line is keeping the page from refreshing
+                    $("#board-container").html(html);
+                },
+                error: function(xhr, status, error){
+                    console.error("An error occurred: " + error);
+                }
+            });
+        }
 
             // Left Click AJAX Logic
             $(document).ready(function(){
                 $(document).on("click", ".game-button button", function(e){
-                    //e.preventDefault();
+                    e.preventDefault();
             
                     var row = $(this).data("row");
                     var col = $(this).data("col");
@@ -41,8 +60,7 @@
                         headers: { "RequestVerificationToken": token },
 
                         success: function(html){
-                            wrapper.replaceWith(html);
-                            $("#board-container").replaceWith(html);
+                            $("#board-container").html(html);
                         },
 
                         error: function(xhr, status, error){

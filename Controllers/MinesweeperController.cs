@@ -69,6 +69,8 @@ namespace MinesweeperMilestone.Controllers
         }
 
         // Handles the right click from the grid
+        [HttpPost] 
+        [ValidateAntiForgeryToken]
         public IActionResult Flag(int row, int col)
         {
             Board gameBoard = HttpContext.Session.GetObjectFromJson<Board>("CurrentGame");
@@ -76,14 +78,12 @@ namespace MinesweeperMilestone.Controllers
             if (gameBoard != null && gameBoard.CheckGameState() == Board.GameState.InProgress)
             {
                 var targetCell = gameBoard.cells[row, col];
-
-                // Call Flag logic from Board.cs
                 gameBoard.ProcessMove(targetCell, "Flag", row, col);
-
                 HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
             }
-            // REMOVE WHEN PARTIAL UPDATE IS IMPLEMENTED
-            return RedirectToAction("Index");
+
+            // Return the partial view instead of a redirect
+            return PartialView("_board", gameBoard);
         }
 
         // code that should be used for the Partial page update. 
