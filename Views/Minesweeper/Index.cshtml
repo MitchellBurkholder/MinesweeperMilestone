@@ -50,37 +50,48 @@
     </div><!--code for cell rednering-->
 </div>
 
-/*
-    The scripts below might be causing a problem.
-*/
+
+<!--The scripts below might be causing a problem. -->
+
 
 @section Scripts {
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-		<script>
-			$(document).ready(function(){
-            $(document).on.("click", ".game-button button", function(e){
-					e.preventDefault();
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script>
+
+            // Right-Click Flag Logic
+            function handleRightClick(event, row, col) {
+                event.preventDefault(); // Stop the default browser context menu
+                window.location.href = `/Minesweeper/Flag?row=${row}&col=${col}`;
+            }
+
+            // Left Click AJAX Logic
+            $(document).ready(function(){
+                $(document).on("click", ".game-button button", function(e){
+                    e.preventDefault();
+            
                     var row = $(this).data("row");
                     var col = $(this).data("col");
                     var wrapper = $(this).closest(".game-button");
                     var token = $('input[name="__RequestVerificationToken"]').val();
+            
                     $(this).prop("disabled", true);
-					$.ajax({
-						type: "POST",
+            
+                    $.ajax({
+                        type: "POST",
                         url: "/MineSweeper/PartialPageCellUpdate",
-						data: {row: row, col: col},
+                        data: {row: row, col: col},
                         headers: token ? { "RequestVerificationToken": token } : {},
-						success : function(html){
-					    wrapper.replaceWith(html);
-							
-						},
-						error: function(xhr, status, error){
-							console.error("An error occurred: " + error);
-						}
 
-					});
-				}
-			})
-		</script>
+                        success: function(html){
+                            wrapper.replaceWith(html);
+                        },
+
+                        error: function(xhr, status, error){
+                        console.error("An error occurred: " + error);
+                        }
+                    });
+                }); 
+            });
+    </script>
         }
 }
