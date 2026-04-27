@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MinesweeperMilestone.Filters;
 using MinesweeperMilestone.Models;
-using MinesweeperMilestone.Models.UserDAO;
-using Microsoft.Extensions.Configuration; // 1. Add this using statement!
+using Microsoft.Extensions.Configuration;
+using MinesweeperMilestone.Services; 
 
 namespace MinesweeperMilestone.Controllers
 {
