@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using MinesweeperMilestone.Extensions;
 using MinesweeperMilestone.Filters;
 using MinesweeperMilestone.Models;
+using MinesweeperMilestone.Services;
 using System.Reflection;
 using System.Runtime.InteropServices.JavaScript;
 
@@ -30,8 +32,12 @@ namespace MinesweeperMilestone.Controllers
         [HttpPost]
         public IActionResult ProcessCreate(int size, int difficulty)
         {
-            // create a fresh board when the form is submitted
             Board gameBoard = new Board(size, difficulty);
+
+            GameService gameService = new GameService(gameBoard);
+
+            gameService.InitializeBoard();
+
             HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
 
             return RedirectToAction("Index");
@@ -45,22 +51,14 @@ namespace MinesweeperMilestone.Controllers
 
             if (gameBoard != null)
             {
-                // Only allow moves if the game isn't over
-                if (gameBoard.CheckGameState() == Board.GameState.InProgress)
+                GameService gameService = new GameService(gameBoard);
+
+                if (gameService.CheckGameState() == Board.GameState.InProgress)
                 {
-                    // Grab the specific cell
                     var targetCell = gameBoard.cells[row, col];
 
-                    // Run the existing game logic
-                    gameBoard.ProcessMove(targetCell, "Visit", row, col);
+                    gameService.ProcessMove(targetCell, "Visit", row, col);
 
-                    // Check for bomb hit 
-                    if (targetCell.isBomb)
-                    {
-                        // gameBoard.
-                    }
-
-                    // Save the updated board state back to the session
                     HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
                 }
             }
@@ -68,53 +66,54 @@ namespace MinesweeperMilestone.Controllers
             return RedirectToAction("Index");
         }
 
-        // Handles the right click from the grid
-        [HttpPost] 
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Flag(int row, int col)
         {
             Board gameBoard = HttpContext.Session.GetObjectFromJson<Board>("CurrentGame");
 
-            if (gameBoard != null && gameBoard.CheckGameState() == Board.GameState.InProgress)
+            if (gameBoard != null)
             {
-                var targetCell = gameBoard.cells[row, col];
-                gameBoard.ProcessMove(targetCell, "Flag", row, col);
-                HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
+                GameService gameService = new GameService(gameBoard);
+
+                if (gameService.CheckGameState() == Board.GameState.InProgress)
+                {
+                    var targetCell = gameBoard.cells[row, col];
+
+                    gameService.ProcessMove(targetCell, "Flag", row, col);
+
+                    HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
+                }
             }
 
-            // Return the partial view instead of a redirect
             return PartialView("_board", gameBoard);
         }
 
-        // code that should be used for the Partial page update. 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult PartialPageCellUpdate(int row, int col)
         {
             Board gameBoard = HttpContext.Session.GetObjectFromJson<Board>("CurrentGame");
-            
+
             if (gameBoard == null)
             {
                 return BadRequest();
             }
             else
             {
-                // Only allow moves if the game isn't over
-                if (gameBoard.CheckGameState() == Board.GameState.InProgress)
+                GameService gameService = new GameService(gameBoard);
+
+                if (gameService.CheckGameState() == Board.GameState.InProgress)
                 {
-                    // Grab the specific cell
                     var targetCell = gameBoard.cells[row, col];
 
-                    // Run the existing game logic
-                    gameBoard.ProcessMove(targetCell, "Visit", row, col);
+                    gameService.ProcessMove(targetCell, "Visit", row, col);
 
-                    // Save the updated board state back to the session
                     HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
                 }
             }
-                  
+
             return PartialView("_board", gameBoard);
-                
         }
     }
 }

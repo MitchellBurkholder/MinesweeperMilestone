@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using MinesweeperMilestone.Models;
 
-namespace MinesweeperMilestone.Models.UserDAO
+namespace MinesweeperMilestone.Services
 {
     public class UserDAO : IUserManger
     {

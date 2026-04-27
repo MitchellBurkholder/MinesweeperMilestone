@@ -2,8 +2,10 @@
 
 @{
     ViewData["Title"] = "Minesweeper Board";
-    // Check game state
-    var currentState = Model.CheckGameState();
+    
+    var gameService = new MinesweeperMilestone.Services.GameService(Model);
+
+    var currentState = gameService.CheckGameState();
     bool isGameOver = currentState != MinesweeperMilestone.Models.Board.GameState.InProgress;
 }
 
@@ -15,7 +17,7 @@
     {
         <div class="alert alert-success">
             <h2 class="text-success">You Win!</h2>
-            <h3>Final Score: @Model.DetermineFinalScore()</h3>
+            <h3>Final Score: @gameService.DetermineFinalScore()</h3>
             <a asp-action="StartGame" asp-controller="User" class="btn btn-success">New Game</a>
         </div>
     }
@@ -40,7 +42,6 @@
                 {
                     var cell = Model.cells[r, c];
 
-                    // The the ViewDataDictionary class is use to move specific data from this view to the partial one
                     @await Html.PartialAsync("_Cells", cell, new ViewDataDictionary(ViewData) {
                         { "isGameOver", isGameOver }, 
                         { "r", r}, 

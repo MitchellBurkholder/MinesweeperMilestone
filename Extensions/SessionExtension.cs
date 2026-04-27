@@ -2,7 +2,7 @@
 using Newtonsoft.Json; // Changed to Newtonsoft for 2d array support
 using System.Text.Json.Serialization;
 
-namespace MinesweeperMilestone
+namespace MinesweeperMilestone.Extensions
 {
     public static class SessionExtensions
     {

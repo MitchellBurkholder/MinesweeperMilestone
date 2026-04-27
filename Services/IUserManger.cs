@@ -1,4 +1,6 @@
-﻿namespace MinesweeperMilestone.Models
+﻿using MinesweeperMilestone.Models;
+
+namespace MinesweeperMilestone.Services
 {
     public interface IUserManger
     {
