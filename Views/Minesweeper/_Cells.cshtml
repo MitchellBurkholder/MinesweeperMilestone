@@ -63,21 +63,19 @@
     {
         // FLAGGED: Wrap in a div to prevent left-click,
         // but right click still works for unflagging
-        <div style="@cellStyle" oncontextmenu="handleRightClick(event, @r, @c);">
-            <img src="@Url.Content(imagePath)" alt="Flagged Cell" style="width: 100%; height: 100%; display: block;" />
-        </div>
-    }
-    /*else
-    {
-        // UNVISITED: Active link for left-click, 
-        // and the right-click event for flagging
-        <a asp-action="Visit" asp-route-row="@r" asp-route-col="@c" style="@cellStyle" oncontextmenu="handleRightClick(event, @r, @c);">
-            <img src="@Url.Content(imagePath)" alt="Unvisited Cell" style="width: 100%; height: 100%; display: block;" />
-        </a>
-    }*/
+        //<div style="@cellStyle" oncontextmenu="handleRightClick(event, @r, @c);">
+            //<img src="@Url.Content(imagePath)" alt="Flagged Cell" style="width: 100%; height: 100%; display: block;" />
+        //</div>
 
-    // I ADDED THE ONCONTEXTMENU TO THIS COMMENTED OUT BLOCK TOO
-     //This should be used for the ajax stuff, but might be not correct
+        <div style="@cellStyle" oncontextmenu="handleRightClick(event, @r, @c);">
+            <button class="cell-btn" type="button" data-row="@r" data-col="@c";" style="width:100%;height:100%;border:none;background:none;padding:0;">
+            <img src="@Url.Content(imagePath)" alt="Flagged Cell" style="width:100%;height:100%;display:block;" />
+            </button>
+        </div>
+       
+    }
+
+     
     else
     {
        <div class="game-button" data-row="@r" data-col="@c" style="@cellStyle">

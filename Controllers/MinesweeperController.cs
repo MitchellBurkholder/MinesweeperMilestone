@@ -39,7 +39,7 @@ namespace MinesweeperMilestone.Controllers
 
 
         // Handles the left click from the grid
-        public IActionResult Visit(int row, int col)
+        /*public IActionResult Visit(int row, int col)
         {
             Board gameBoard = HttpContext.Session.GetObjectFromJson<Board>("CurrentGame");
 
@@ -66,8 +66,10 @@ namespace MinesweeperMilestone.Controllers
             }
 
             return RedirectToAction("Index");
-        }
+        }*/
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         // Handles the right click from the grid
         public IActionResult Flag(int row, int col)
         {
@@ -83,7 +85,7 @@ namespace MinesweeperMilestone.Controllers
                 HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
             }
             // REMOVE WHEN PARTIAL UPDATE IS IMPLEMENTED
-            return RedirectToAction("Index");
+            return PartialView("_Board", gameBoard);
         }
 
         // code that should be used for the Partial page update. 
@@ -113,7 +115,7 @@ namespace MinesweeperMilestone.Controllers
                 }
             }
                   
-            return PartialView("_board", gameBoard);
+            return PartialView("_Board", gameBoard);
                 
         }
     }
