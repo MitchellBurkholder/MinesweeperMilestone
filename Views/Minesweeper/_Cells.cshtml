@@ -2,8 +2,6 @@
 @model MinesweeperMilestone.Models.Cell
 
 @{
-    // data to pass over from the Index view
-    //bool isGameOver = (bool)@ViewData["isGameOver"];
     bool isGameOver = false; 
     if (ViewData.ContainsKey("isGameOver") && ViewData["isGameOver"] is bool b) {
         isGameOver = b;
@@ -56,16 +54,10 @@
             <img src="@Url.Content(imagePath)" alt="Cell" style="width: 100%; height: 100%; display: block;" />
         </div>
     }
-
     // ONCONTEXTMENU is the event that fires on right click, 
     // and we can use it to trigger the flagging action without interfering with left-clicks
     else if (cell.isFlagged)
     {
-        // FLAGGED: Wrap in a div to prevent left-click,
-        // but right click still works for unflagging
-        //<div style="@cellStyle" oncontextmenu="handleRightClick(event, @r, @c);">
-            //<img src="@Url.Content(imagePath)" alt="Flagged Cell" style="width: 100%; height: 100%; display: block;" />
-        //</div>
 
         <div style="@cellStyle" oncontextmenu="handleRightClick(event, @r, @c);">
             <button class="cell-btn" type="button" data-row="@r" data-col="@c";" style="width:100%;height:100%;border:none;background:none;padding:0;">
@@ -74,8 +66,6 @@
         </div>
        
     }
-
-     
     else
     {
        <div class="game-button" data-row="@r" data-col="@c" style="@cellStyle">

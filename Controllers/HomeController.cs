@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace MinesweeperMilestone.Controllers
 {
+    
     public class HomeController : Controller
     {
         /// <summary>

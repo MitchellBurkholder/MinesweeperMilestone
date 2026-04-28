@@ -43,29 +43,6 @@ namespace MinesweeperMilestone.Controllers
             return RedirectToAction("Index");
         }
 
-
-        // Handles the left click from the grid
-        /*public IActionResult Visit(int row, int col)
-        {
-            Board gameBoard = HttpContext.Session.GetObjectFromJson<Board>("CurrentGame");
-
-            if (gameBoard != null)
-            {
-                GameService gameService = new GameService(gameBoard);
-
-                if (gameService.CheckGameState() == Board.GameState.InProgress)
-                {
-                    var targetCell = gameBoard.cells[row, col];
-
-                    gameService.ProcessMove(targetCell, "Visit", row, col);
-
-                    HttpContext.Session.SetObjectAsJson("CurrentGame", gameBoard);
-                }
-            }
-
-            return RedirectToAction("Index");
-        }*/
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         // Handles the right click from the grid
@@ -116,6 +93,13 @@ namespace MinesweeperMilestone.Controllers
                   
             return PartialView("_board", gameBoard);
                 
+        }
+
+        [HttpPost]
+        // will be used to load a new game. 
+        public IActionResult LoadGame(Board gameBoard)
+        {
+            return View("LoadGame");
         }
     }
 }

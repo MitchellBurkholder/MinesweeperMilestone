@@ -11,18 +11,24 @@
     <div id="board-container">
         @await Html.PartialAsync("_board")
     </div>
+    <div>
+        <p></p>
+        <button>
+            Save Game
+        </button>
+        <button asp-action="LoadGame" method="post">
+            Load Game
+        </button>
+    </div>
 </div>
-
-
-<!--The scripts below might be causing a problem. -->
-
 
 @section Scripts {
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <script>
 
         $("#page-timestamp").text("Loaded: " + new Date().toLocaleString());
-            // Right-Click Flag Logic
+
+        // Right-Click Flag Logic
         function handleRightClick(event, row, col) {
             event.preventDefault(); // Stop the context menu
     
@@ -54,7 +60,6 @@
                     var col = $(this).data("col");
                     var wrapper = $(this).closest(".game-button");
                     var token = $('input[name="__RequestVerificationToken"]').val();
-                      
             
                     $(this).prop("disabled", true);
             
