@@ -97,9 +97,18 @@ namespace MinesweeperMilestone.Controllers
 
         [HttpPost]
         // will be used to load a new game. 
-        public IActionResult LoadGame(Board gameBoard)
+        public IActionResult LoadGame()
         {
+            //List<Game> previousGames = new List<Game>
             return View("LoadGame");
+        }
+
+        [HttpPost]
+        // use to save the game, it takes the current board & adds it to the database
+        public IActionResult SaveGame(Board gameBoard)
+        {
+
+            return View("Index");
         }
     }
 }
