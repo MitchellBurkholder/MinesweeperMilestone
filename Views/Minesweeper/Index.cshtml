@@ -14,7 +14,7 @@
     <div>
         <br />
         <!--Save game button-->
-        <form asp-action="SaveGame" asp-controller="Minesweeper" method="post" style="margin-bottom: 20px;">
+        <form asp-action="SaveGame" asp-controller="Minesweeper" method="post" style="margin-bottom: 20px; display: inline-block;">
             <button type="submit" class="btn btn-warning">Save Game</button>
         </form>
 
@@ -25,7 +25,6 @@
             </div>
         }
         <!--Load game button-->
-        <br />
         <form asp-action="LoadGame" asp-controller="Minesweeper" method="get" style="display: inline-block; margin-bottom: 20px;">
             <button type="submit" class="btn btn-info">Load Game</button>
         </form>
