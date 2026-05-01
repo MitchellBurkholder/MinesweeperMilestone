@@ -4,6 +4,7 @@ using MinesweeperMilestone.Extensions;
 using MinesweeperMilestone.Filters;
 using MinesweeperMilestone.Models;
 using MinesweeperMilestone.Services;
+using Newtonsoft.Json;
 using System.Reflection;
 using System.Runtime.InteropServices.JavaScript;
 
@@ -11,6 +12,15 @@ namespace MinesweeperMilestone.Controllers
 {
     public class MinesweeperController : Controller
     {
+        // this is for saving the game to the database, so we can pull the connection string from appsettings.json
+        private readonly IConfiguration _config;
+
+        // ditto
+        public MinesweeperController(IConfiguration config)
+        {
+            _config = config;
+        }
+
         // Accepts the form data. Defaults to 5x5, Easy if no data is passed yet.
         [SessionCheckFilter]
         public IActionResult Index()
@@ -104,13 +114,29 @@ namespace MinesweeperMilestone.Controllers
         }
 
         [HttpPost]
-        // use to save the game, it takes the current board & adds it to the database
         public IActionResult SaveGame()
         {
-            // turn the info of this into a json string to be placed into a data base. 
+            // Get the game board and the user
             Board gameBoard = HttpContext.Session.GetObjectFromJson<Board>("CurrentGame");
+            UserModel currentUser = HttpContext.Session.GetObjectFromJson<UserModel>("User");
 
-            return View("Index");
+            if (gameBoard != null && currentUser != null)
+            {
+                // Serialize both objects into JSON
+                string gameDataJson = JsonConvert.SerializeObject(gameBoard);
+                string userInfoJson = JsonConvert.SerializeObject(currentUser);
+
+                // Send to database
+                string connectionString = _config.GetConnectionString("DefaultConnection"); // important for secrets.json
+                UserDAO dao = new UserDAO(connectionString);
+                dao.SaveCurrentGame(currentUser.Id, gameDataJson, userInfoJson);
+
+                // success message
+                TempData["SaveMessage"] = "Game saved successfully!";
+            }
+
+            // Redirect back to the game page (should continue the game)
+            return RedirectToAction("Index");
         }
     }
 }

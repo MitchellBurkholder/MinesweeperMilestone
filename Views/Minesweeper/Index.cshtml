@@ -12,11 +12,20 @@
         @await Html.PartialAsync("_board")
     </div>
     <div>
-        <p></p>
-        <button>
-            Save Game
-        </button>
-        <p></p>
+        <br />
+        <!--Save game button-->
+        <form asp-action="SaveGame" asp-controller="Minesweeper" method="post" style="margin-bottom: 20px;">
+            <button type="submit" class="btn btn-warning">Save Game</button>
+        </form>
+
+        @if (TempData["SaveMessage"] != null)
+        {
+            <div class="alert alert-success mt-2">
+                @TempData["SaveMessage"]
+            </div>
+        }
+        <!--Load game button-->
+        <br />
         <form asp-action="LoadGame">
             <button>
                 Load Game

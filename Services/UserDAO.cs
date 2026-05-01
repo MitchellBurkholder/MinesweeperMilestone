@@ -14,6 +14,37 @@ namespace MinesweeperMilestone.Services
             connectionString = connString;
         }
 
+        // method to save the current game data to the database
+        public bool SaveCurrentGame(int userId, string gameDataJson, string userInfoJson)
+        {
+            bool success = false;
+            string connectionString = this.connectionString;
+            string sqlStatement = "INSERT INTO dbo.Games (UserID, DateSaved, GameData, UserInfo) VALUES (@UserId, @DateSaved, @GameData, @UserInfo)";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(sqlStatement, connection);
+
+                command.Parameters.AddWithValue("@UserId", userId);
+                command.Parameters.AddWithValue("@DateSaved", DateTime.Now);
+                command.Parameters.AddWithValue("@GameData", gameDataJson);
+                command.Parameters.AddWithValue("@UserInfo", userInfoJson);
+
+                try
+                {
+                    // Open the connection and execute the command
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            return success;
+        }
+
         /// <summary>
         /// Adds a user to the database
         /// </summary>
