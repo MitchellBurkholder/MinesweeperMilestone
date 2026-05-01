@@ -1,16 +1,19 @@
-﻿<!-- insert model carrying previous data base stuff-->
-
+﻿@model MinesweeperMilestone.Models.LoginViewModel
 <h1>Load/Delete a previous game</h1>
 <p>Choose from one of the options below</p>
 
-
-<form asp-action="ProcessCreate"  method="post">
-    <div class="form-group">
-        <input type="submit" value="Load Game" class="btn btn-primary" />
-    </div>
-    <p></p>
-    <div class="form-group">
-        <input type="submit" value="Delete Game" class="btn btn-primary" />
-    </div>
+<form asp-action="ProcessCreate"  method="post">  
+    <select name="Game Data">
+        <option value="">Select a Save Game</option>
+    </select>
+    <input type="submit" value="Load Game" class="btn btn-primary" />
 </form>
+
+<div class="form-group">
+    <input type="submit" value="Delete Game" class="btn btn-primary" />
+</div>
+
+
+
+
 

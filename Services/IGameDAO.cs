@@ -18,7 +18,7 @@ namespace MinesweeperMilestone.Services
         /// </summary>
         /// <param name="userModel"></param>
         /// <returns></returns>
-        public int MakeSave(Board board, GameStat gameData);
+        public int AddSave(SaveGame newSave);
 
         /// <summary>
         /// Deletes a User

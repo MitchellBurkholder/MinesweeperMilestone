@@ -105,8 +105,10 @@ namespace MinesweeperMilestone.Controllers
 
         [HttpPost]
         // use to save the game, it takes the current board & adds it to the database
-        public IActionResult SaveGame(Board gameBoard)
+        public IActionResult SaveGame()
         {
+            // turn the info of this into a json string to be placed into a data base. 
+            Board gameBoard = HttpContext.Session.GetObjectFromJson<Board>("CurrentGame");
 
             return View("Index");
         }
