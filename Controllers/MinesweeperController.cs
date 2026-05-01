@@ -77,6 +77,7 @@ namespace MinesweeperMilestone.Controllers
             return PartialView("_board", gameBoard);
         }
 
+        // Handles the left click from the grid (updating the individual cell, not the whole page)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult PartialPageCellUpdate(int row, int col)
@@ -105,12 +106,57 @@ namespace MinesweeperMilestone.Controllers
                 
         }
 
-        [HttpPost]
-        // will be used to load a new game. 
+        // Gets the list of saved games for the current user and sends it to the View to be displayed in a table
+        [HttpGet]
         public IActionResult LoadGame()
         {
-            //List<Game> previousGames = new List<Game>
-            return View("LoadGame");
+            // Figure out who is logged in
+            UserModel currentUser = HttpContext.Session.GetObjectFromJson<UserModel>("User");
+            if (currentUser == null) return RedirectToAction("Login", "User");
+
+            // Get ONLY their games from the DB
+            string connString = _config.GetConnectionString("DefaultConnection");
+            UserDAO dao = new UserDAO(connString);
+            List<SaveGame> savedGames = dao.GetSavedGames(currentUser.Id);
+
+            // Send the list to the View
+            return View(savedGames);
+        }
+
+        // Gets the game data from the DB, converts it back into a Board object, puts it in the session, and redirects to the game page
+        [HttpPost]
+        public IActionResult ProcessLoadGame(int gameId)
+        {
+            string connString = _config.GetConnectionString("DefaultConnection");
+            UserDAO dao = new UserDAO(connString);
+
+            // Get JSON string from DB
+            string gameJson = dao.GetGameData(gameId);
+
+            if (!string.IsNullOrEmpty(gameJson))
+            {
+                // Convert it back into a Board object
+                Board loadedBoard = JsonConvert.DeserializeObject<Board>(gameJson);
+
+                // put it in the  session and go to the game screen
+                HttpContext.Session.SetObjectAsJson("CurrentGame", loadedBoard);
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("LoadGame");
+        }
+
+        // Deletes the game from the database, then refreshes the page to update the list
+        [HttpPost]
+        public IActionResult ProcessDeleteGame(int gameId)
+        {
+            string connString = _config.GetConnectionString("DefaultConnection");
+            UserDAO dao = new UserDAO(connString);
+
+            dao.DeleteGame(gameId);
+
+            // Refresh the page so the deleted game disappears from the table
+            return RedirectToAction("LoadGame");
         }
 
         [HttpPost]
