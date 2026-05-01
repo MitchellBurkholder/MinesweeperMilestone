@@ -260,5 +260,31 @@ namespace MinesweeperMilestone.Services
                 }
             }
         }
+
+        // Get list of save games for a user
+        public List<SaveGame> GetSavedGames(int userId)
+        {
+            List<SaveGame> games = new List<SaveGame>();
+            string sql = "SELECT Id, DateSaved FROM dbo.Games WHERE UserID = @UserId ORDER BY DateSaved DESC"; // newest saves first
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    
+                    games.Add(new SaveGame
+                    {
+                        Id = reader.GetInt32(0),
+                        Date = reader.GetDateTime(1) // Populating the Date property from GameStat
+                    });
+                }
+            }
+            return games;
+        }
     }
 }
