@@ -303,5 +303,18 @@ namespace MinesweeperMilestone.Services
             }
             return gameDataJson;
         }
+
+        // Delete a saved game
+        public void DeleteGame(int gameId)
+        {
+            string sql = "DELETE FROM dbo.Games WHERE Id = @Id";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@Id", gameId);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }
