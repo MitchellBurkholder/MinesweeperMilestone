@@ -2,8 +2,8 @@
 {
     public class SaveGame : GameStat
     {
-        int Id { get; set; }
-        Board GameBoard {  get; set; }
+        public int Id { get; set; }
+        public Board GameBoard {  get; set; }
         public SaveGame(int id, string playerName, Board gameBoard, DateTime date, TimeSpan timeElapsed) {
             Id = id;
             this.PlayerName = playerName;
