@@ -286,5 +286,22 @@ namespace MinesweeperMilestone.Services
             }
             return games;
         }
+
+        // Get the game data for a specific save game
+        public string GetGameData(int gameId)
+        {
+            string gameDataJson = "";
+            string sql = "SELECT GameData FROM dbo.Games WHERE Id = @Id";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@Id", gameId);
+
+                conn.Open();
+                gameDataJson = (string)cmd.ExecuteScalar();
+            }
+            return gameDataJson;
+        }
     }
 }
