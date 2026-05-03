@@ -24,11 +24,11 @@ namespace MinesweeperMilestone.Services
             throw new NotImplementedException();
         }
 
-        public void DeleteSaveGame(SaveGame saveGame)
+        public void DeleteSaveGameById(int id)
         {
             throw new NotImplementedException();
         }
-
+        
         public List<SaveGame> GetAllSavedGames()
         {
             throw new NotImplementedException();
